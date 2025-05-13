@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    # כתובת השרת של Let's Encrypt
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # אימייל שיקבל התראות על פקיעת אישורים
+    email: sara.beck.dev@gmail.com  # שנה לאימייל שלך
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    # מתודת אימות השליטה בדומיין
+    solvers:
+    - http01:
+        ingress:
+          class: nginx

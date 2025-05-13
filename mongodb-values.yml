@@ -1,0 +1,11 @@
+architecture: replicaset
+replicaCount: 2
+auth:
+  enabled: true
+  rootPassword: thigusnkcsu  
+  username: democrm
+  password: thigusnkcsu    
+  database:  democrm
+persistence:
+  enabled: true
+  size: 1Gi

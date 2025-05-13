@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: demo-crm-conf
 data:
-  MONGODB_URI: "mongodb://mongo-0.mongodb,mongo-1.mongodb:27017/democrm?replicaSet=rs0"
+  # MONGODB_URI: "mongodb://mongo-0.mongodb,mongo-1.mongodb:27017/democrm?replicaSet=rs0"
   LOG_LEVEL: "info"
   PERSISTENCE: "true"

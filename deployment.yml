@@ -23,6 +23,8 @@ spec:
         envFrom:
         - configMapRef:
             name: demo-crm-conf
+        - secretRef:
+            name: mongodb-connection-secret
         resources:
           limits:
             cpu: "0.5"

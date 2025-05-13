@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-crm-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx 
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx  
+  tls:  
+  - hosts:
+    - sara-cowsay.ddns.net  
+    secretName: demo-crm-tls 
+
+  rules:
+  - host: sara-cowsay.ddns.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-crm
+            port:
+              number: 80
