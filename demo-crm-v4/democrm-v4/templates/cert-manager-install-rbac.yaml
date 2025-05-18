@@ -1,0 +1,46 @@
+{{- if .Values.certManager.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "democrm.fullname" . }}-cert-manager-install
+  labels:
+    {{- include "democrm.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "democrm.fullname" . }}-cert-manager-install
+  labels:
+    {{- include "democrm.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "democrm.fullname" . }}-cert-manager-install
+  labels:
+    {{- include "democrm.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "democrm.fullname" . }}-cert-manager-install
+subjects:
+- kind: ServiceAccount
+  name: {{ include "democrm.fullname" . }}-cert-manager-install
+  namespace: {{ .Release.Namespace }}
+{{- end }}

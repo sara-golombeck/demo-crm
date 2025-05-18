@@ -7,10 +7,10 @@ image:
 
 resources:
   limits:
-    cpu: "0.5"
+    cpu: 500m
     memory: "512Mi"
   requests:
-    cpu: "0.2"
+    cpu: 200m
     memory: "256Mi"
 
 config:
@@ -41,17 +41,18 @@ ingress:
       hosts:
         - sara-cowsay.ddns.net
 
-cert-manager:
-  installCRDs: true
 
+certManager:
+  enabled: true
+  installCRDs: true
+  version: "v1.14.5"
+  email: sara.beck.dev@gmail.com
 
 
 ingress-nginx:
   controller:
     service:
       type: LoadBalancer
-
-# mongodbUri: "mongodb://democrm:mypassword@democrm-mongodb:27017/democrm?directConnection=false&retryWrites=true&w=majority"
 
 service:
   port: 80

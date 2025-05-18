@@ -1,0 +1,41 @@
+{{- if .Values.certManager.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "democrm.fullname" . }}-cert-manager-install
+  labels:
+    {{- include "democrm.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: {{ include "democrm.fullname" . }}-cert-manager-install
+      containers:
+      - name: install-cert-manager
+        image: alpine/helm:3.12.0
+        env:
+        - name: NAMESPACE
+          value: {{ .Release.Namespace }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Adding Jetstack Helm repository..."
+          helm repo add jetstack https://charts.jetstack.io || true
+          helm repo update
+          
+          echo "Installing cert-manager..."
+          helm upgrade --install cert-manager jetstack/cert-manager \
+            --namespace {{ .Release.Namespace }} \
+            --version {{ .Values.certManager.version }} \
+            --set installCRDs=false \
+            --set global.leaderElection.namespace={{ .Release.Namespace }} \
+            --wait --timeout=300s
+          
+          echo "cert-manager installed successfully!"
+{{- end }}
