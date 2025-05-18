@@ -1,0 +1,57 @@
+replicaCount: 2
+
+image:
+  repository: pwstaging/demo-crm
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: "0.5"
+    memory: "512Mi"
+  requests:
+    cpu: "0.2"
+    memory: "256Mi"
+
+config:
+  logLevel: "info"
+  persistence: "true"
+
+mongodb:
+  auth:
+    enabled: true
+    username: "democrm"
+    password: "mypassword"
+    database: "democrm"
+  replicaCount: 2
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: sara-cowsay.ddns.net
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: democrm-tls
+      hosts:
+        - sara-cowsay.ddns.net
+
+cert-manager:
+  installCRDs: true
+
+
+
+ingress-nginx:
+  controller:
+    service:
+      type: LoadBalancer
+
+# mongodbUri: "mongodb://democrm:mypassword@democrm-mongodb:27017/democrm?directConnection=false&retryWrites=true&w=majority"
+
+service:
+  port: 80
